@@ -5,7 +5,7 @@
   dayjs.extend(dayjs_plugin_customParseFormat);
 
   const { $, toast, renderTable, setValidation, setProgress, updateBadge, updateSummary, initTheme } = window.UI;
-  const { validateHeaders } = window.Validator;
+  const { validateHeaders, canonicalizeHeaders } = window.Validator;
   const { applyRules } = window.RuleEngine;
   const { readFile, parsePasted, download } = window.ExcelIO;
 
@@ -70,12 +70,22 @@
   });
 
   function loadData(headers, rows, msg) {
-    state.headers = headers;
-    state.rows = rows;
+    // Canonicalize headers so pasted data with different casing/spacing still
+    // matches the required columns and the rule engine's source/target names.
+    const known = collectKnownColumns(state.config);
+    const { canonicalHeaders, mapping } = canonicalizeHeaders(headers, known);
+    const normalizedRows = rows.map(r => {
+      const out = {};
+      headers.forEach(h => { out[mapping[h]] = r[h]; });
+      return out;
+    });
+
+    state.headers = canonicalHeaders;
+    state.rows = normalizedRows;
     state.originalRows = null;
     state.processed = null;
-    updateBadge(rows.length);
-    const v = validateHeaders(headers, state.config?.requiredColumns || []);
+    updateBadge(normalizedRows.length);
+    const v = validateHeaders(canonicalHeaders, state.config?.requiredColumns || []);
     if (v.ok) {
       setValidation({ ok: true, message: `All required columns present (${state.config.requiredColumns.length}).` });
       $('#process-btn').disabled = false;
@@ -84,8 +94,20 @@
       $('#process-btn').disabled = true;
     }
     $('#summary-card').hidden = true;
-    renderTable(mergeHeaders(headers), rows);
+    renderTable(mergeHeaders(canonicalHeaders), normalizedRows);
     toast(msg, 'success');
+  }
+
+  function collectKnownColumns(config) {
+    const cols = new Set();
+    if (!config) return [];
+    (config.requiredColumns || []).forEach(c => cols.add(c));
+    (config.rules || []).forEach(r => {
+      if (r.column) cols.add(r.column);
+      if (r.source) cols.add(r.source);
+      if (Array.isArray(r.sources)) r.sources.forEach(s => cols.add(s));
+    });
+    return [...cols];
   }
 
   function mergeHeaders(headers) {
