@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spreadsheet Automation Dashboard</title>
+  <meta name="description" content="Automate repetitive Excel edits with JSON-driven rules — 100% client-side." />
+  <!--
+    This root index.html exists so GitHub Pages "Deploy from a branch"
+    ( main / (root) ) has something to serve at https://dansmarquis.github.io/sheet-genie/.
+    The real app is a fully static dashboard under /public/dashboard/, so we
+    redirect there. When Pages Source is switched to "GitHub Actions", the
+    workflow at .github/workflows/deploy-pages.yml publishes the dashboard
+    directly at the site root and this redirect is no longer used.
+  -->
+  <meta http-equiv="refresh" content="0; url=./public/dashboard/index.html" />
+  <link rel="canonical" href="./public/dashboard/index.html" />
+  <style>
+    :root { color-scheme: light dark; }
+    html, body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #0f1115;
+      color: #e6e8ee;
+    }
+    main {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+    }
+    .card {
+      max-width: 480px;
+      padding: 32px;
+      background: #171a21;
+      border: 1px solid #262b36;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    h1 { margin: 0 0 8px; font-size: 20px; font-weight: 600; }
+    p  { margin: 6px 0; color: #a4acbc; font-size: 14px; }
+    a  { color: #7aa2ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .spinner {
+      width: 24px; height: 24px; margin: 0 auto 16px;
+      border: 2px solid #2a3040; border-top-color: #7aa2ff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="card">
+      <div class="spinner" aria-hidden="true"></div>
+      <h1>Loading dashboard…</h1>
+      <p>Redirecting to <a href="./public/dashboard/index.html">the Spreadsheet Automation Dashboard</a>.</p>
+      <p style="margin-top: 16px; font-size: 12px;">
+        If nothing happens, <a href="./public/dashboard/index.html">click here</a>.
+      </p>
+    </div>
+  </main>
+  <script>
+    // JS fallback in case meta-refresh is blocked.
+    window.location.replace("./public/dashboard/index.html");
+  </script>
+</body>
+</html>

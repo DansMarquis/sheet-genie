@@ -8,11 +8,19 @@ name: Deploy dashboard to GitHub Pages
 # The surrounding TanStack Start / Nitro / Cloudflare setup in this repo is
 # not used for Pages; it targets a server runtime and would need a separate,
 # different pipeline to be hosted elsewhere.
+#
+# IMPORTANT: This workflow only works when Pages Source is set to
+# "GitHub Actions" (Settings → Pages → Source). While Source is set to
+# "Deploy from a branch", the built-in "pages build and deployment" workflow
+# serves the branch as-is (using the root index.html redirect), and this
+# workflow would fail at the deploy step. That's why it is manual-only
+# below — flip Source to "GitHub Actions" and then run this workflow.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+  # push:
+  #   branches: [main]
+  # ^ Re-enable after switching Pages Source to "GitHub Actions".
 
 permissions:
   contents: read
