@@ -16,6 +16,9 @@ dist-ssr
 .nitro
 *.local
 
+# GitHub Pages artifact (assembled by .github/workflows/deploy-pages.yml)
+_site/
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
