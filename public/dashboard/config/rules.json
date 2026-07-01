@@ -1,0 +1,17 @@
+{
+  "requiredColumns": [
+    "Production Statement",
+    "PO",
+    "Request Date",
+    "Requester",
+    "Description",
+    "Price",
+    "Transfection"
+  ],
+  "rules": [
+    { "column": "Purification", "operation": "addDays", "source": "Transfection", "days": 9 },
+    { "column": "QC",           "operation": "addDays", "source": "Purification", "days": 1 },
+    { "column": "Delivery",     "operation": "addDays", "source": "QC",           "days": 1 },
+    { "column": "Status",       "operation": "constant", "value": "Completed" }
+  ]
+}
